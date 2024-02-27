@@ -13,7 +13,7 @@ builder.Services.AddMvc()
         {
             options.SuppressModelStateInvalidFilter = true;
         });
-builder.Services.AddControllers(); 
+builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -42,12 +42,12 @@ builder.Services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounte
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 #endregion
 #region <versioning>
-//builder.Services.AddApiVersioning(options =>
-//{
-//    options.ReportApiVersions = true;
-//    options.DefaultApiVersion = new ApiVersion(1, 0);
-//    options.AssumeDefaultVersionWhenUnspecified = true;
-//});
+builder.Services.AddApiVersioning(options =>
+{
+    options.ReportApiVersions = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+});
 #endregion
 #region <dbContext> 
 builder.Services.AddDbContext<AppDBContext>(options => options.UseInMemoryDatabase("PaymentDatabase"));
@@ -95,11 +95,11 @@ builder.Services.AddSwaggerGen(c =>
                 });
 
 });
- 
+
 
 var app = builder.Build();
 
- 
+
 
 if (app.Environment.IsDevelopment())
 {

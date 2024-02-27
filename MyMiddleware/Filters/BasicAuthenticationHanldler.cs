@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options; 
 using System.Net.Http.Headers;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -55,15 +56,25 @@ public class BasicAuthenticationHandler : AuthenticationHandler<AuthenticationSc
        
    }
 
-   private bool IsAuthorized(string user, string code)
-   {
-        var user_ = Environment.GetEnvironmentVariable("APIuser");
-        var code_ = Environment.GetEnvironmentVariable("APIcode");
+    private string GetHashedPassword(string password)
+    {
+        using (SHA256 sha256 = SHA256.Create())
+        {
+            byte[] hashedBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
+            return Convert.ToBase64String(hashedBytes);
+        }
+    }
 
-      
-        var result =  user == user_ && code == code_;
+    private bool IsAuthorized(string user, string password)
+    {
+        var user_ = Environment.GetEnvironmentVariable("APIuser");
+        var hashedPassword_ = Environment.GetEnvironmentVariable("APIhashedPassword");
+
+        var hashedPassword = GetHashedPassword(password);
+
+        var result = user == user_ && hashedPassword == hashedPassword_;
         Logger.LogInformation($"connection {result}");
         return result;
-   }
+    }
 }
 
